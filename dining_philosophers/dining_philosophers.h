@@ -26,19 +26,28 @@ typedef struct
 } Philosopher;
 
 /**
+ * Structure used to send arguments to thread function
+ **/
+typedef struct takeChopstick_args {
+    Philosopher *philosopher;
+    Chopstick *leftHand;
+	Chopstick *rightHand;
+} TakeChopstickArgs;
+
+/**
  * Vinculates a Chopstick to a Philosopher
  **/
-void takeChopstick(Philosopher*, Chopstick*);
+void* takeChopstick(void*);
 
 /**
  * The Philosopher starts eating
  **/
-void eat(Philosopher*);
+void* eat(Philosopher*);
 
 /**
  * The Philosopher starts thinking
  **/
-void think(Philosopher*);
+void* think(Philosopher*);
 
 /**
  * Creates a new Philosophers List

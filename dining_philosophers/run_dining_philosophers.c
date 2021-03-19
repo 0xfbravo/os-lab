@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <stdio.h>
+#include <pthread.h>
 #include "dining_philosophers.h"
 
 int main(int argc, char **argv) {
@@ -17,9 +18,10 @@ int main(int argc, char **argv) {
 	int thinkingTime = strtol(argv[2], NULL, 10);
 	int eatingTime = strtol(argv[3], NULL, 10);
 
-	printf("--- Executing with: %d Philosophers, Thinking for %d and Eating for %d\n", philosophersCount, thinkingTime, eatingTime);
+	printf("--- Executing with: %d Philosophers, Thinking for %ds and Eating for %ds\n", philosophersCount, thinkingTime, eatingTime);
 
 	// Creates Philosophers and Chopsticks
+	pthread_t philosophersThreads[philosophersCount];
 	Philosopher** philosophers = newPhilosophersListOfSize(philosophersCount);
 	Chopstick** chopsticks = newChopsticksListOfSize(philosophersCount);
 
@@ -27,6 +29,34 @@ int main(int argc, char **argv) {
 		philosophers[i] = newPhilosopher(i, eatingTime, thinkingTime);
 		chopsticks[i] = newChopstick(i);
 	}
+
+	// Open threads
+	for (int i = 0; i < philosophersCount; i++) {
+		int leftHandIndex = i;
+		int rightHandIndex = (i + 1) >= philosophersCount ? 0 : i + 1;
+
+		TakeChopstickArgs* args = malloc(sizeof(TakeChopstickArgs));
+		args->philosopher = philosophers[i];
+		args->leftHand = chopsticks[leftHandIndex];
+		args->rightHand = chopsticks[rightHandIndex];
+
+		pthread_create(&philosophersThreads[i], NULL, takeChopstick, args);
+	}
+
+	// Wait/join threads
+	for (int i = 0; i < philosophersCount; i++) {
+		pthread_join(philosophersThreads[i], NULL);
+	}
+
+
+
+	// for (int i = 0; i < philosophersCount; i++) {
+		
+	// 	takeChopstick(philosopher, leftHand);
+	// 	takeChopstick(philosopher, rightHand);
+	// 	think(philosopher);
+	// 	eat(philosopher);
+	// }
 
 	freeMemory(philosophers, chopsticks, philosophersCount);
 
