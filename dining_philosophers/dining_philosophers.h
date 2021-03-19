@@ -1,0 +1,6 @@
+#ifndef DINING_PHILOSOPHERS
+#define DINING_PHILOSOPHERS
+
+
+
+#endif
