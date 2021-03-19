@@ -47,15 +47,16 @@ int main(int argc, char **argv) {
 		pthread_join(philosophersThreads[i], NULL);
 	}
 
+	// Destroy resources
+	for (int i = 0; i < philosophersCount; i++) {
+		pthread_mutex_destroy(&chopsticksResources[i]);
+	}
 
-
-	// for (int i = 0; i < philosophersCount; i++) {
-		
-	// 	takeChopstick(philosopher, leftHand);
-	// 	takeChopstick(philosopher, rightHand);
-	// 	think(philosopher);
-	// 	eat(philosopher);
-	// }
+	// Check if the all philosophers did eat
+	printf("Did all philosophers eat?");
+	for (int i = 0; i < philosophersCount; i++) {
+		printf("Philosopher %d - %s\n", philosophers[i]->id, (philosophers[i]->didEat == 0) ? "false" : "true");
+	}
 
 	freeMemory(philosophers, chopsticks, philosophersCount);
 

@@ -20,6 +20,7 @@ typedef struct
 	int id;
 	int thinkingTime;
 	int eatingTime;
+	int didEat;
 	Chopstick *leftHand;
 	Chopstick *rightHand;
 } Philosopher;

@@ -55,6 +55,7 @@ void eat(Philosopher *philosopher) {
 
 	printf("The [Philosopher %d] started eating.\n", philosopher->id);
 	sleep(philosopher->eatingTime);
+	philosopher->didEat = 1;
 	printf("The [Philosopher %d] ended eating.\n", philosopher->id);
 
 }
@@ -75,6 +76,7 @@ Philosopher* newPhilosopher(int id, int eatingTime, int thinkingTime) {
 	newPhilosopher->thinkingTime = thinkingTime;
 	newPhilosopher->leftHand = NULL;
 	newPhilosopher->rightHand = NULL;
+	newPhilosopher->didEat = 0;
 	printf("[Philosopher %d] created.\n", id);
 	return newPhilosopher;
 
