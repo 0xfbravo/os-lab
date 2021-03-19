@@ -1,68 +1,70 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <unistd.h>
+#include <pthread.h>
 #include "dining_philosophers.h"
 
 void* takeChopstick(void *arguments) {
 
 	TakeChopstickArgs *args = arguments;
+	
+	int philosophersCount = args->philosophersCount;
+	pthread_mutex_t *chopsticksResources = args->chopsticksResources;
+	Chopstick** chopsticks = args-> chopsticksList;
+	
 	Philosopher *philosopher = args->philosopher;
-    Chopstick *leftHand = args->leftHand;
-	Chopstick *rightHand = args->rightHand;
+	int leftHandIndex = philosopher->id;
+	int rightHandIndex = (leftHandIndex + 1) % philosophersCount;
 
-	if (leftHand->isTaken || rightHand->isTaken) {
-		printf("The [Philosopher %d] can't take the [Chopstick %d] or [Chopstick %d] right now.\n", philosopher->id, leftHand->id, rightHand->id);
-		think(philosopher);
-		takeChopstick(arguments);
-		return 0;
-	}
+	// Lock resources
+	Chopstick *leftHand = chopsticks[leftHandIndex];
+	Chopstick *rightHand = chopsticks[rightHandIndex];
+	pthread_mutex_lock(&chopsticksResources[leftHandIndex]);
+	pthread_mutex_lock(&chopsticksResources[rightHandIndex]);
 
 	if (philosopher->leftHand == NULL) {
 		philosopher->leftHand = leftHand;
-		leftHand->isTaken = 1;
 		printf("The [Philosopher %d] is using the [Chopstick %d] on his left hand.\n", philosopher->id, leftHand->id);
 	}
-	else if (philosopher->rightHand == NULL) {
+	
+	if (philosopher->rightHand == NULL) {
 		philosopher->rightHand = rightHand;
-		rightHand->isTaken = 1;
 		printf("The [Philosopher %d] is using the [Chopstick %d] on his right hand.\n", philosopher->id, rightHand->id);
 	}
 	
 	eat(philosopher);
 	think(philosopher);
 
-	return 0;
-
-}
-
-void* eat(Philosopher *philosopher) {
-
-	if (philosopher->leftHand == NULL || philosopher->rightHand == NULL) {
-		printf("The [Philosopher %d] need two Chopsticks to eat!\n", philosopher->id);
-		think(philosopher);
-		return 0;
-	}
-
-	printf("The [Philosopher %d] started eating.\n", philosopher->id);
-	sleep(philosopher->eatingTime);
-	printf("The [Philosopher %d] ended eating.\n", philosopher->id);
-	philosopher->leftHand->isTaken = 0;
+	// Unlock resources
+	pthread_mutex_unlock(&chopsticksResources[leftHandIndex]);
+	pthread_mutex_unlock(&chopsticksResources[rightHandIndex]);
 	philosopher->leftHand = NULL;
-	philosopher->rightHand->isTaken = 0;
 	philosopher->rightHand = NULL;
 
 	return 0;
 
 }
 
-void* think(Philosopher *philosopher) {
+void eat(Philosopher *philosopher) {
+
+	if (philosopher->leftHand == NULL || philosopher->rightHand == NULL) {
+		printf("The [Philosopher %d] need two Chopsticks to eat!\n", philosopher->id);
+		think(philosopher);
+		return;
+	}
+
+	printf("The [Philosopher %d] started eating.\n", philosopher->id);
+	sleep(philosopher->eatingTime);
+	printf("The [Philosopher %d] ended eating.\n", philosopher->id);
+
+}
+
+void think(Philosopher *philosopher) {
 
 	printf("The [Philosopher %d] started thinking.\n", philosopher->id);
 	sleep(philosopher->thinkingTime);
 	printf("The [Philosopher %d] ended thinking.\n", philosopher->id);
 
-	return 0;
-	
 }
 
 Philosopher* newPhilosopher(int id, int eatingTime, int thinkingTime) {
@@ -82,7 +84,6 @@ Chopstick* newChopstick(int id) {
 
 	Chopstick *newChopstick = malloc(sizeof(Chopstick));
 	newChopstick->id = id;
-	newChopstick->isTaken = 0;
 	printf("[Chopstick %d] created.\n", id);
 	return newChopstick;
 

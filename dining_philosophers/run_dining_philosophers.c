@@ -22,24 +22,23 @@ int main(int argc, char **argv) {
 
 	// Creates Philosophers and Chopsticks
 	pthread_t philosophersThreads[philosophersCount];
+	pthread_mutex_t chopsticksResources[philosophersCount];
 	Philosopher** philosophers = newPhilosophersListOfSize(philosophersCount);
 	Chopstick** chopsticks = newChopsticksListOfSize(philosophersCount);
 
 	for (int i = 0; i < philosophersCount; i++) {
 		philosophers[i] = newPhilosopher(i, eatingTime, thinkingTime);
 		chopsticks[i] = newChopstick(i);
+		pthread_mutex_init(&chopsticksResources[i],NULL);
 	}
 
 	// Open threads
 	for (int i = 0; i < philosophersCount; i++) {
-		int leftHandIndex = i;
-		int rightHandIndex = (i + 1) >= philosophersCount ? 0 : i + 1;
-
 		TakeChopstickArgs* args = malloc(sizeof(TakeChopstickArgs));
+		args->chopsticksResources = chopsticksResources;
+		args->chopsticksList = chopsticks;
+		args->philosophersCount = philosophersCount;
 		args->philosopher = philosophers[i];
-		args->leftHand = chopsticks[leftHandIndex];
-		args->rightHand = chopsticks[rightHandIndex];
-
 		pthread_create(&philosophersThreads[i], NULL, takeChopstick, args);
 	}
 

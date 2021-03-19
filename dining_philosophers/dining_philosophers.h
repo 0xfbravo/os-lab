@@ -3,12 +3,11 @@
 
 /**
  * The Chopstick struct
- * Contains an int value that indicates if the resource is taken.
+ * Contains only an identification.
  **/
 typedef struct
 {
 	int id;
-	int isTaken;
 } Chopstick;
 
 /**
@@ -29,9 +28,10 @@ typedef struct
  * Structure used to send arguments to thread function
  **/
 typedef struct takeChopstick_args {
+	pthread_mutex_t *chopsticksResources;
+	Chopstick** chopsticksList;
+	int philosophersCount;
     Philosopher *philosopher;
-    Chopstick *leftHand;
-	Chopstick *rightHand;
 } TakeChopstickArgs;
 
 /**
@@ -42,12 +42,12 @@ void* takeChopstick(void*);
 /**
  * The Philosopher starts eating
  **/
-void* eat(Philosopher*);
+void eat(Philosopher*);
 
 /**
  * The Philosopher starts thinking
  **/
-void* think(Philosopher*);
+void think(Philosopher*);
 
 /**
  * Creates a new Philosophers List
