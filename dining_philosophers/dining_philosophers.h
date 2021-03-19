@@ -19,6 +19,8 @@ typedef struct
 typedef struct
 {
 	int id;
+	int thinkingTime;
+	int eatingTime;
 	Chopstick *leftHand;
 	Chopstick *rightHand;
 } Philosopher;
@@ -26,16 +28,42 @@ typedef struct
 /**
  * Vinculates a Chopstick to a Philosopher
  **/
-void takeChopstick(Philosopher *philosopher, Chopstick *chopstick);
+void takeChopstick(Philosopher*, Chopstick*);
 
 /**
  * The Philosopher starts eating
  **/
-void eat(Philosopher *philosopher, int eatingTime);
+void eat(Philosopher*);
 
 /**
  * The Philosopher starts thinking
  **/
-void think(Philosopher *philosopher, int thinkingTime);
+void think(Philosopher*);
+
+/**
+ * Creates a new Philosophers List
+ **/
+Philosopher** newPhilosophersListOfSize(int);
+
+/**
+ * Creates a new Chopsticks List
+ **/
+Chopstick** newChopsticksListOfSize(int);
+
+
+/**
+ * Creates a new Philosopher
+ **/
+Philosopher* newPhilosopher(int, int, int);
+
+/**
+ * Creates a new Chopstick
+ **/
+Chopstick* newChopstick(int);
+
+/**
+ * Frees the memory
+ **/
+void freeMemory(Philosopher**, Chopstick**, int);
 
 #endif
