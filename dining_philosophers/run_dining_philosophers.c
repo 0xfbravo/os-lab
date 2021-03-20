@@ -12,19 +12,19 @@ int main(int argc, char **argv) {
 		return EXIT_FAILURE;
 	}
 
-	// Reads list mode and size from user input
+	// Reads user input
 	int philosophersCount = strtol(argv[1], NULL, 10);
 	int thinkingTime = strtol(argv[2], NULL, 10);
 	int eatingTime = strtol(argv[3], NULL, 10);
 
-	printf("[Executing with: %d Philosophers, Thinking for %ds and Eating for %ds]\n", philosophersCount, thinkingTime, eatingTime);
+	printf("Dining Philosophers: [Executing with: %d Philosophers, Thinking for %ds and Eating for %ds]\n", philosophersCount, thinkingTime, eatingTime);
 	printf("===\n");
 
 	// Creates Philosophers and Chopsticks
 	pthread_t philosophersThreads[philosophersCount];
 	pthread_mutex_t chopsticksResources[philosophersCount];
-	Philosopher** philosophers = newPhilosophersListOfSize(philosophersCount);
-	Chopstick** chopsticks = newChopsticksListOfSize(philosophersCount);
+	Philosopher **philosophers = newPhilosophersListOfSize(philosophersCount);
+	Chopstick **chopsticks = newChopsticksListOfSize(philosophersCount);
 
 	for (int i = 0; i < philosophersCount; i++) {
 		philosophers[i] = newPhilosopher(i, eatingTime, thinkingTime);
@@ -36,7 +36,7 @@ int main(int argc, char **argv) {
 
 	// Open threads
 	for (int i = 0; i < philosophersCount; i++) {
-		TakeChopstickArgs* args = malloc(sizeof(TakeChopstickArgs));
+		TakeChopstickArgs *args = malloc(sizeof(TakeChopstickArgs));
 		args->chopsticksResources = chopsticksResources;
 		args->chopsticksList = chopsticks;
 		args->philosophersCount = philosophersCount;

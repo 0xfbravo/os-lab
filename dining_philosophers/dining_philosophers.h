@@ -53,16 +53,6 @@ void eat(Philosopher*);
 void think(Philosopher*);
 
 /**
- * Creates a new Philosophers List
- **/
-Philosopher** newPhilosophersListOfSize(int);
-
-/**
- * Creates a new Chopsticks List
- **/
-Chopstick** newChopsticksListOfSize(int);
-
-/**
  * Creates a new Philosopher
  **/
 Philosopher* newPhilosopher(int, int, int);
@@ -71,6 +61,16 @@ Philosopher* newPhilosopher(int, int, int);
  * Creates a new Chopstick
  **/
 Chopstick* newChopstick(int);
+
+/**
+ * Creates a new Philosophers List
+ **/
+Philosopher** newPhilosophersListOfSize(int);
+
+/**
+ * Creates a new Chopsticks List
+ **/
+Chopstick** newChopsticksListOfSize(int);
 
 /**
  * Frees the memory

@@ -8,7 +8,7 @@ void* takeChopstick(void *arguments) {
 	
 	int philosophersCount = args->philosophersCount;
 	pthread_mutex_t *chopsticksResources = args->chopsticksResources;
-	Chopstick **chopsticks = args-> chopsticksList;
+	Chopstick **chopsticks = args->chopsticksList;
 	
 	Philosopher *philosopher = args->philosopher;
 	int leftHandIndex = philosopher->id;
@@ -101,7 +101,7 @@ Chopstick** newChopsticksListOfSize(int size) {
 
 }
 
-void freeMemory(Philosopher** philosophers, Chopstick** chopsticks, int listSize) {
+void freeMemory(Philosopher **philosophers, Chopstick **chopsticks, int listSize) {
 
 	for (int i = 0; i < listSize; i++) {
 		free(philosophers[i]);
