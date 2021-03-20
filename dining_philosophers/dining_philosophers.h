@@ -1,5 +1,7 @@
 #ifndef DINING_PHILOSOPHERS
 #define DINING_PHILOSOPHERS
+#include <pthread.h>
+#include <unistd.h>
 
 /**
  * The Chopstick struct
@@ -30,9 +32,9 @@ typedef struct
  **/
 typedef struct takeChopstick_args {
 	pthread_mutex_t *chopsticksResources;
-	Chopstick** chopsticksList;
+	Chopstick **chopsticksList;
 	int philosophersCount;
-    Philosopher *philosopher;
+	Philosopher *philosopher;
 } TakeChopstickArgs;
 
 /**
@@ -59,7 +61,6 @@ Philosopher** newPhilosophersListOfSize(int);
  * Creates a new Chopsticks List
  **/
 Chopstick** newChopsticksListOfSize(int);
-
 
 /**
  * Creates a new Philosopher

@@ -1,5 +1,6 @@
 {
 	"files.associations": {
-		"dining_philosophers.h": "c"
+		"dining_philosophers.h": "c",
+		"producer_consumer.h": "c"
 	}
 }

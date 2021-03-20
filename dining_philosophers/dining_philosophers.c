@@ -1,7 +1,5 @@
 #include <stdlib.h>
 #include <stdio.h>
-#include <unistd.h>
-#include <pthread.h>
 #include "dining_philosophers.h"
 
 void* takeChopstick(void *arguments) {
@@ -10,7 +8,7 @@ void* takeChopstick(void *arguments) {
 	
 	int philosophersCount = args->philosophersCount;
 	pthread_mutex_t *chopsticksResources = args->chopsticksResources;
-	Chopstick** chopsticks = args-> chopsticksList;
+	Chopstick **chopsticks = args-> chopsticksList;
 	
 	Philosopher *philosopher = args->philosopher;
 	int leftHandIndex = philosopher->id;

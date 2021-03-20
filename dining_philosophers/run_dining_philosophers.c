@@ -1,6 +1,5 @@
 #include <stdlib.h>
 #include <stdio.h>
-#include <pthread.h>
 #include "dining_philosophers.h"
 
 int main(int argc, char **argv) {
@@ -18,7 +17,8 @@ int main(int argc, char **argv) {
 	int thinkingTime = strtol(argv[2], NULL, 10);
 	int eatingTime = strtol(argv[3], NULL, 10);
 
-	printf("--- Executing with: %d Philosophers, Thinking for %ds and Eating for %ds\n", philosophersCount, thinkingTime, eatingTime);
+	printf("[Executing with: %d Philosophers, Thinking for %ds and Eating for %ds]\n", philosophersCount, thinkingTime, eatingTime);
+	printf("===\n");
 
 	// Creates Philosophers and Chopsticks
 	pthread_t philosophersThreads[philosophersCount];
@@ -31,6 +31,8 @@ int main(int argc, char **argv) {
 		chopsticks[i] = newChopstick(i);
 		pthread_mutex_init(&chopsticksResources[i],NULL);
 	}
+
+	printf("===\n");
 
 	// Open threads
 	for (int i = 0; i < philosophersCount; i++) {
@@ -53,9 +55,10 @@ int main(int argc, char **argv) {
 	}
 
 	// Check if the all philosophers did eat
-	printf("Did all philosophers eat?");
+	printf("===\n");
+	printf("Did all philosophers eat?\n");
 	for (int i = 0; i < philosophersCount; i++) {
-		printf("Philosopher %d - %s\n", philosophers[i]->id, (philosophers[i]->didEat == 0) ? "false" : "true");
+		printf(" * Philosopher %d: %s\n", philosophers[i]->id, (philosophers[i]->didEat == 0) ? "false" : "true");
 	}
 
 	freeMemory(philosophers, chopsticks, philosophersCount);
