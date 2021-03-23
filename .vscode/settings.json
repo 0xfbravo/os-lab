@@ -1,0 +1,14 @@
+{
+	"files.associations": {
+		"dining_philosophers.h": "c",
+		"producer_consumer.h": "c",
+		"unistd.h": "c",
+		"pthread.h": "c",
+		"stdlib.h": "c",
+		"bitset": "c",
+		"__bit_reference": "c",
+		"__split_buffer": "c",
+		"string": "c",
+		"vector": "c"
+	}
+}
