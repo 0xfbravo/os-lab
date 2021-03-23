@@ -1,7 +1,21 @@
 #ifndef PRODUCER_CONSUMER
 #define PRODUCER_CONSUMER
+#include <math.h>
 #include <pthread.h>
+#include <semaphore.h>
+#include <fcntl.h> 
 #include <unistd.h>
+
+#define EMPTY_SEMAPHORE_NAME "emptySemaphore"
+#define FULL_SEMAPHORE_NAME "fullSemaphore"
+
+pthread_mutex_t resources;
+sem_t *emptySemaphore;
+sem_t *fullSemaphore;
+int *buffer;
+int bufferSize;
+int totalProduction;
+int totalConsumption;
 
 typedef struct producer {
 	int id;
@@ -10,26 +24,18 @@ typedef struct producer {
 
 typedef struct consumer {
 	int id;
-	int *comsuption;
+	int consumption;
 } Consumer;
 
 /**
  * Structure used to send arguments to thread function
  **/
 typedef struct produce_args {
-	pthread_mutex_t *resources;
-	int *buffer;
-	int bufferSize;
 	Producer *producer;
-	int *totalProduction;
 } ProduceArgs;
 
 typedef struct consume_args {
-	pthread_mutex_t *resources;
-	int *buffer;
-	int bufferSize;
 	Consumer *consumer;
-	int *totalConsumption;
 } ConsumeArgs;
 
 /**

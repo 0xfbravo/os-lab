@@ -5,31 +5,48 @@
 void* produce(void *arguments) {
 
 	ProduceArgs *args = arguments;
-	pthread_mutex_t *resources = args->resources;
-	int *buffer = args->buffer;
-	int bufferSize = args->bufferSize;
-	int totalProduction = *args->totalProduction;
 	Producer *producer = args->producer;
 
 	do {
 		// Lock resources
-		pthread_mutex_lock(resources);
-		// Produce
-		totalProduction++;
-		// Unlock resources
-		pthread_mutex_unlock(resources);
+		sem_wait(emptySemaphore);
+		pthread_mutex_lock(&resources);
 		producer->production++;
+		int bufferSlot = floor(totalProduction % bufferSize);
+		printf("[Producer %d] producing the product %d and saving on slot [%d].\n", producer->id, totalProduction, bufferSlot);
+		totalProduction++;
+		buffer[bufferSlot] = totalProduction;
+		// Unlock resources
+		pthread_mutex_unlock(&resources);
+		sem_post(fullSemaphore);
+		sleep(1);
 	}
-	while (totalProduction < bufferSize);
-
-	return 0;
+	while (1);
 
 }
 
 void* consume(void *arguments) {
 
-	return 0;
+	ConsumeArgs *args = arguments;
+	Consumer *consumer = args->consumer;
 
+	do {
+		int productToConsume;
+		// Lock resources
+		sem_wait(fullSemaphore);
+		pthread_mutex_lock(&resources);
+		// Consume
+		int bufferSlot = floor(totalProduction % bufferSize);
+		productToConsume = buffer[bufferSlot];
+		printf("[Consumer %d] consuming the product %d.\n", consumer->id, productToConsume);
+		consumer->consumption++;
+		totalConsumption++;
+		// Unlock resources
+		pthread_mutex_unlock(&resources);
+		sem_post(emptySemaphore);
+		sleep(1);
+	}
+	while (1);
 }
 
 Producer* newProducer(int id) {
@@ -46,7 +63,7 @@ Consumer* newConsumer(int id) {
 
 	Consumer *newConsumer = malloc(sizeof(Consumer));
 	newConsumer->id = id;
-	newConsumer->comsuption = 0;
+	newConsumer->consumption = 0;
 	printf("[Consumer %d] created.\n", id);
 	return newConsumer;
 
