@@ -6,24 +6,25 @@
 #include <fcntl.h> 
 #include <unistd.h>
 
-#define EMPTY_SEMAPHORE_NAME "emptySemaphore"
-#define FULL_SEMAPHORE_NAME "fullSemaphore"
+#define EMPTY_SEMAPHORE_NAME "/empty_semaphore"
+#define FULL_SEMAPHORE_NAME "/full_semaphore"
 
 pthread_mutex_t resources;
 sem_t *emptySemaphore;
 sem_t *fullSemaphore;
 int *buffer;
 int bufferSize;
-int totalProduction;
-int totalConsumption;
+int fullSlots;
 
 typedef struct producer {
 	int id;
+	int capacity;
 	int production;
 } Producer;
 
 typedef struct consumer {
 	int id;
+	int capacity;
 	int consumption;
 } Consumer;
 
@@ -51,12 +52,12 @@ void* consume(void*);
 /**
  * Creates a new Producer
  **/
-Producer* newProducer(int);
+Producer* newProducer(int, int);
 
 /**
  * Creates a new Consumer
  **/
-Consumer* newConsumer(int);
+Consumer* newConsumer(int, int);
 
 /**
  * Creates a new Producers List
